@@ -178,11 +178,6 @@ struct BookmarkCard: View {
                             RoundedRectangle(cornerRadius: 16, style: .continuous)
                                 .stroke(.white.opacity(isHovered ? 0.3 : 0.1), lineWidth: 1.5)
                         )
-                    
-                    Rectangle()
-                        .fill(.white.opacity(0.04))
-                        .frame(height: 1)
-                        .padding(.top, -1)
                 }
                 .frame(width: 72, height: 110)
             }

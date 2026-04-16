@@ -23,9 +23,7 @@ struct TabsListView: View {
         ScrollView {
             VStack {
                 Button {
-                    withAnimation(.spring(response: 0.35)) {
-                        addTab(tabs: $tabs, session: $session, movieId: currWindow.movieId!, service: "netflix")
-                    }
+                    // Switch to search
                 } label: {
                     Image(systemName: "plus.circle.fill")
                         .font(.system(size: 24, weight: .medium))
@@ -70,40 +68,51 @@ struct TabsListView: View {
     }
 }
 
+func switchTab(
+    tabId: UUID,
+    movieId: String,
+    currWindow: Binding<WindowType>
+) {
+    withAnimation(.spring(response: 0.28)) {
+        currWindow.wrappedValue = WindowType(id: tabId, type: "tab", movieId: movieId)
+    }
+}
+
 func addTab(
     tabs: Binding<[MovieTabs]>,
     session: Binding<[WatchSession]>,
     movieId: String,
     service: String
-) {
-    withAnimation(.spring(response: 0.35)) {
-        // Find all tabs for this movie
-        let filteredTabs = tabs.wrappedValue.filter { $0.movieId == movieId }
-
-        // Find all sessions for those tabs
-        let sessionsForMovie = session.wrappedValue.filter { tabSession in
-            filteredTabs.contains(where: { $0.id == tabSession.id })
-        }
-
-        // Check if the service already exists for this movie
-        let serviceAlreadyExists = sessionsForMovie.contains { $0.serviceId == service }
-        if serviceAlreadyExists { return }
-
-        // Create new tab and session
-        let newTab = MovieTabs(movieId: movieId)
-        let newSession = WatchSession(
-            id: newTab.id,
-            serviceId: service,
-            profile: "Andre",
-            progress: 0,
-            lastViewed: Date(),
-            isBookmarked: true,
-            url: URL(string: "https://www.netflix.com/watch/123")!
-        )
-
-        tabs.wrappedValue.insert(newTab, at: 0)
-        session.wrappedValue.insert(newSession, at: 0)
+) -> UUID {
+    // Find all tabs for this movie
+    let filteredTabs = tabs.wrappedValue.filter { $0.movieId == movieId }
+    
+    // Find all sessions for those tabs
+    let sessionsForMovie = session.wrappedValue.filter { tabSession in
+        filteredTabs.contains(where: { $0.id == tabSession.id })
     }
+    
+    // Check if the service already exists for this movie
+    if let tabFiltered = sessionsForMovie.first(where: { $0.serviceId == service }) {
+        return tabFiltered.id
+    }
+    
+    // Create new tab and session
+    let newTab = MovieTabs(movieId: movieId)
+    let newSession = WatchSession(
+        id: newTab.id,
+        serviceId: service,
+        profile: "Andre",
+        progress: 0,
+        lastViewed: Date(),
+        isBookmarked: true,
+        url: URL(string: "https://www.netflix.com/watch/123")!
+    )
+    
+    tabs.wrappedValue.insert(newTab, at: 0)
+    session.wrappedValue.insert(newSession, at: 0)
+    
+    return newTab.id
 }
 
 private struct TabDropDelegate: DropDelegate {
@@ -168,9 +177,7 @@ struct TabCard: View {
     
     var body: some View {
         Button {
-            withAnimation(.spring(response: 0.28)) {
-                currWindow = WindowType(id: tab.id, type: "tab", movieId: tab.movieId)
-            }
+            switchTab(tabId: tab.id, movieId: tab.movieId, currWindow: $currWindow)
         } label: {
             HStack(spacing: 12) {
                 if let url = movieInfo?.posterURL {

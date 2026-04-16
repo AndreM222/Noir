@@ -107,11 +107,14 @@ struct DeviceBar: View {
                     .transition(.move(edge: .top).combined(with: .opacity).combined(with: .scale(scale: 0.95, anchor: .top)))
             }
             
-            DeviceButton(open: $openWindow, deviceInfo: devices.first(where: { $0.id == selectedDeviceID }), deviceIcon: "desktopcomputer")
+            DeviceButton(
+                open: $openWindow,
+                deviceInfo: devices.first(where: { $0.id == selectedDeviceID }),
+                deviceIcon: "desktopcomputer"
+            )
         }
         .frame(width: 380)
         .glassBackgroundEffect()
-        .padding(.horizontal, 12)
         .onAppear {
             registerDevice(devices: &devices)
             selectedDeviceID = devices.contains(where: { $0.id == currentDevice().id }) ? currentDevice().id : devices.first?.id

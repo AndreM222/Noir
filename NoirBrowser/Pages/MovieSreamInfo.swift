@@ -47,9 +47,10 @@ struct VideoBackgroundView: View {
     }
 }
 
-struct ServiceCard: View {
+private struct ServiceCard: View {
     @Binding var tabs: [MovieTabs]
     @Binding var session: [WatchSession]
+    @Binding var currWindow: WindowType
     let movieId: String
     let service: Service?
     
@@ -61,7 +62,8 @@ struct ServiceCard: View {
             let hasProgress = sessionInfo?.serviceId == service.id
             
             Button {
-                addTab(tabs: $tabs, session: $session, movieId: movieId, service: service.id)
+                let tabId = addTab(tabs: $tabs, session: $session, movieId: movieId, service: service.id)
+                switchTab(tabId: tabId, movieId: movieId, currWindow: $currWindow)
             } label: {
                 HStack {
                     VStack(spacing: 5) {
@@ -129,7 +131,7 @@ struct MovieSreamInfo: View {
                 
                 // Poster + Gradient Overlay
                 ZStack(alignment: .bottomLeading) {
-                    ZStack {
+                    ZStack(alignment: .bottom) {
                         if let trailer = movieInfo?.trailerURL {
                             VideoBackgroundView(url: trailer)
                         } else {
@@ -137,6 +139,9 @@ struct MovieSreamInfo: View {
                                 .resizable()
                                 .scaledToFill()
                         }
+                        
+                        ProgressiveBlurView(maxBlur: 20, steps: 8)
+                                .frame(height: 180)
                     }
                     .frame(height: 300)
                     .clipped()
@@ -186,8 +191,13 @@ struct MovieSreamInfo: View {
                         } label: {
                             HStack {
                                 Image(systemName: "play.fill")
-                                Text("Resume")
-                                    .bold()
+                                if sessionInfo.progress <= 0 {
+                                    Text("Start")
+                                        .bold()
+                                } else {
+                                    Text("Resume")
+                                        .bold()
+                                }
                             }
                             .frame(maxWidth: .infinity)
                             .padding()
@@ -207,11 +217,11 @@ struct MovieSreamInfo: View {
                             if bookmarkInfo?.id != nil {
                                 bookmarks.removeAll(where: { $0.movieId == movieInfo?.id })
                             } else {
-                                bookmarks.append(
+                                bookmarks.insert(
                                     Bookmarks(
                                         movieId: movieInfo?.id ?? "undefined",
                                         profile: "Andre"
-                                    ))
+                                    ), at: 0)
                             }
                             // Bookmark Change
                         } label: {
@@ -321,6 +331,7 @@ struct MovieSreamInfo: View {
                                         ServiceCard(
                                             tabs: $tabs,
                                             session: $sessions,
+                                            currWindow: $currWindow,
                                             movieId: currWindow.movieId!,
                                             service: service,
                                             sessionInfo: sessions.first { $0.id == movieTab?.id }
@@ -433,27 +444,36 @@ struct MovieSreamInfo: View {
                             Text("Queue")
                         }
                         VStack(alignment: .leading) {
-                            TabsListView(currWindow: $currWindow, tabs: filteredTabsBinding, session: $sessions, movies: Movie.examplesMovie(), services: Service.examples())
+                            TabsListView(
+                                currWindow: $currWindow,
+                                tabs: filteredTabsBinding,
+                                session: $sessions,
+                                movies: Movie.examplesMovie(),
+                                services: Service.examples()
+                            )
                         }.frame(height: 300)
                     }
                 }
                 .padding()
             }
         }
-        .background(
-            
-            LinearGradient(
-                colors: [.clear, .black],
-                startPoint: .top,
-                endPoint: .bottom
-            ).ignoresSafeArea()
-        )
     }
 }
 
 #Preview {
     let movietabs = MovieTabs.examplesMovie()
     
-    MovieSreamInfo(currWindow: .constant(WindowType(id: movietabs[0].id, type: "movie", movieId: movietabs[0].movieId)), tabs: .constant(movietabs), bookmarks: .constant(Bookmarks.examplesBookmarks()), movie: Movie.examplesMovie(), sessions: .constant(WatchSession.examplesSession(tabs: movietabs)), services: Service.examples())
+    MovieSreamInfo(
+        currWindow: .constant(WindowType(
+            id: movietabs[0].id,
+            type: "movie",
+            movieId: movietabs[0].movieId
+        )),
+        tabs: .constant(movietabs),
+        bookmarks: .constant(Bookmarks.examplesBookmarks()),
+        movie: Movie.examplesMovie(),
+        sessions: .constant(WatchSession.examplesSession(tabs: movietabs)),
+        services: Service.examples()
+    )
 }
 
