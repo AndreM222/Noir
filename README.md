@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 # NoirBrowser
 
 A modern streaming browser for movies and TV shows. Seamlessly switch between streaming services, manage watch progress, and organize tabs.
@@ -90,4 +89,3 @@ Some features and architectural decisions may change as the project evolves.
 
 Andre Mossi
 Product Design · Engineering
->>>>>>> 80c11a3 (Rebuild project structure and migrate to new architecture)
