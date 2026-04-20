@@ -8,14 +8,6 @@
 import SwiftUI
 import AppKit
 
-struct ShortcutItem: Identifiable {
-    let id = UUID()
-    var name: String
-    var description: String
-    var binding: String
-    var group: String
-}
-
 struct ShortcutRow: View {
     let item: ShortcutItem
     @State private var isHovering = false
