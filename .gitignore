@@ -1,33 +1,23 @@
-# Xcode
-<<<<<<< HEAD
-#
-# gitignore contributors: remember to update Global/Xcode.gitignore, Objective-C.gitignore & Swift.gitignore
-=======
->>>>>>> 80c11a3 (Rebuild project structure and migrate to new architecture)
+# =========================
+# Xcode / Swift
+# =========================
 
 ## User settings
 *.xcuserstate
 xcuserdata/
 
-<<<<<<< HEAD
-## compatibility with Xcode 8 and earlier (ignoring not required starting Xcode 9)
-*.xcscmblueprint
-*.xccheckout
-
-## Xcode 10
-*.xcworkspace/data
-
-=======
 ## Compatibility
 *.xcscmblueprint
 *.xccheckout
 
->>>>>>> 80c11a3 (Rebuild project structure and migrate to new architecture)
 ## Build generated
 build/
 DerivedData/
 
-## Various settings
+## Workspace data
+*.xcworkspace/data
+
+## Xcode project user data
 *.pbxuser
 !default.pbxuser
 *.mode1v3
@@ -36,84 +26,92 @@ DerivedData/
 !default.mode2v3
 *.perspectivev3
 !default.perspectivev3
-<<<<<<< HEAD
-xcuserdata/
-
-## Other
-*.moved-aside
-*.xccheckout
-
-## Obj-C/Swift specific
-=======
 
 ## Other
 *.moved-aside
 
-## Obj-C/Swift
->>>>>>> 80c11a3 (Rebuild project structure and migrate to new architecture)
+## Swift / Obj-C artifacts
 *.hmap
 *.ipa
-*.dSYM.zip
 *.dSYM
+*.dSYM.zip
 
 ## Playgrounds
 timeline.xctimeline
 playground.xcworkspace
 
+# =========================
 # Swift Package Manager
+# =========================
 .build/
 
-<<<<<<< HEAD
-# CocoaPods
-# We recommend against adding the Pods directory to your .gitignore.
-# However, you should judge for yourself, the pros and cons are mentioned at:
-# https://guides.cocoapods.org/using/using-cocoapods.html#should-i-check-the-pods-directory-into-source-control
-#
-# Pods/
-# Add this line if you want to avoid checking in source code from the Xcode workspace
-# *.xcworkspace
-
+# =========================
 # Carthage
-# Add this line if you want to avoid checking in source code from Carthage dependencies.
-=======
-# Carthage
->>>>>>> 80c11a3 (Rebuild project structure and migrate to new architecture)
+# =========================
 Carthage/Checkouts
 Carthage/Build
 
+# =========================
 # Code Injection
-<<<<<<< HEAD
-# After new code Injection tools there's a generated folder /iOSInjectionProject
-# https://github.com/johnno1962/injectionforxcode
-=======
->>>>>>> 80c11a3 (Rebuild project structure and migrate to new architecture)
+# =========================
 iOSInjectionProject/
 
+# =========================
 # fastlane
+# =========================
 fastlane/report.xml
 fastlane/Preview.html
 fastlane/screenshots/**/*.png
 fastlane/test_output
 
+# =========================
 # macOS
+# =========================
 .DS_Store
 
-<<<<<<< HEAD
-# Xcodegen
-*.xcodeproj
-
-# Environment variables
+# =========================
+# Environment
+# =========================
 .env
-=======
-# Environment variables
-.env
+.env.local
 
-# Xcode modern additions
+# =========================
+# Modern Xcode additions
+# =========================
 *.xcresult
-
-# SwiftUI previews
 *.preview-thumbnails/
 
+# =========================
 # Logs
+# =========================
 *.log
->>>>>>> 80c11a3 (Rebuild project structure and migrate to new architecture)
+
+# =========================
+# Node / JS Tooling
+# =========================
+
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# lockfiles (KEEP THESE TRACKED)
+# package-lock.json
+# yarn.lock
+# pnpm-lock.yaml
+
+# Husky (we KEEP hooks, ignore local state)
+.husky/_/
+
+# Optional caches
+.cache/
+dist/
+coverage/
+
+# =========================
+# Editor / Misc
+# =========================
+
+.vscode/
+.idea/

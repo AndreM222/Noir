@@ -20,14 +20,13 @@ private struct ServicesCard<Content: View>: View {
 
     var body: some View {
         let accent = Color(hex: service.brandColor)
-        
-        VStack(alignment: .leading, spacing: 18) {
 
+        VStack(alignment: .leading, spacing: 18) {
             HStack(spacing: 12) {
                 ZStack {
                     Circle()
                         .fill(accent.opacity(0.15))
-                    
+
                     Image(systemName: "play.rectangle.fill")
                         .font(.system(size: 14, weight: .semibold))
                         .foregroundStyle(accent)
@@ -45,7 +44,7 @@ private struct ServicesCard<Content: View>: View {
                 }
 
                 Spacer()
-                
+
                 Toggle("Service", isOn: $enabled)
                     .toggleStyle(SwitchToggleStyle())
                     .labelsHidden()
@@ -79,10 +78,9 @@ struct ServicesSection: View {
     let services: [Service] = Service.examples()
 
     var body: some View {
-        
         ForEach(services) { service in
             let filteredProfiles = profiles.filter { $0.service == service.id }
-            
+
             ServicesCard(service: service) {
                 ScrollView(.horizontal, showsIndicators: false) {
                     HStack(spacing: 10) {
@@ -122,11 +120,12 @@ private struct ServicePreview: View {
     init() {
         let accountExample = Account.examples()
         let profilesExample = Profile.examples(account: accountExample)
-        
+
         _account = State(initialValue: accountExample[0])
-        _profiles = State(initialValue: profilesExample.filter { $0.account == accountExample.first?.id })
+        _profiles = State(initialValue: profilesExample
+            .filter { $0.account == accountExample.first?.id })
     }
-    
+
     var body: some View {
         ZStack(alignment: .center) {
             Rectangle()
@@ -146,4 +145,3 @@ private struct ServicePreview: View {
         .background(.ultraThinMaterial)
     }
 }
-

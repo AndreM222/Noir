@@ -5,15 +5,15 @@
 //  Created by Andre Mossi on 3/28/26.
 //
 
-import SwiftUI
-import Kingfisher
 import AVKit
+import Kingfisher
+import SwiftUI
 
 struct VideoBackgroundView: View {
     let url: URL?
-    
+
     @State private var player: AVPlayer?
-    
+
     var body: some View {
         ZStack {
             if let player {
@@ -34,7 +34,7 @@ struct VideoBackgroundView: View {
             }
         }
     }
-    
+
     private func loopVideo(_ player: AVPlayer) {
         NotificationCenter.default.addObserver(
             forName: .AVPlayerItemDidPlayToEndTime,
@@ -53,16 +53,21 @@ private struct ServiceCard: View {
     @Binding var currWindow: WindowType
     let movieId: String
     let service: Service?
-    
+
     let sessionInfo: WatchSession?
-    
+
     var body: some View {
         if let service {
             let color = Color(hex: service.brandColor)
             let hasProgress = sessionInfo?.serviceId == service.id
-            
+
             Button {
-                let tabId = addTab(tabs: $tabs, session: $session, movieId: movieId, service: service.id)
+                let tabId = addTab(
+                    tabs: $tabs,
+                    session: $session,
+                    movieId: movieId,
+                    service: service.id
+                )
                 switchTab(tabId: tabId, movieId: movieId, currWindow: $currWindow)
             } label: {
                 HStack {
@@ -72,7 +77,7 @@ private struct ServiceCard: View {
                             .font(.caption2.weight(.medium))
                             .foregroundStyle(.white)
                             .lineLimit(1)
-                        
+
                         // Progress indicator (if available)
                         if hasProgress, let progress = sessionInfo?.progress {
                             ProgressView(value: progress)
@@ -114,21 +119,20 @@ struct MovieSreamInfo: View {
                 // Replace filtered subset in the original array
                 let filteredIds = tabs.filter { $0.movieId == currWindow.movieId }.map(\.id)
                 // Remove old filtered items and add new ones
-                self.tabs = tabs.filter { !filteredIds.contains($0.id) } + newValue
+                tabs = tabs.filter { !filteredIds.contains($0.id) } + newValue
             }
         )
     }
-    
+
     var body: some View {
         let movieTab = tabs.first { $0.id == currWindow.id }
         let movieInfo = movie.first { $0.id == currWindow.movieId }
         let bookmarkInfo = bookmarks.first { $0.movieId == movieInfo?.id }
         let sessionInfo = sessions.first { $0.id == movieTab?.id }
         let serviceInfo = services.first { $0.id == sessionInfo?.serviceId }
-        
+
         ScrollView {
             VStack(alignment: .leading, spacing: 16) {
-                
                 // Poster + Gradient Overlay
                 ZStack(alignment: .bottomLeading) {
                     ZStack(alignment: .bottom) {
@@ -139,20 +143,20 @@ struct MovieSreamInfo: View {
                                 .resizable()
                                 .scaledToFill()
                         }
-                        
+
                         ProgressiveBlurView(maxBlur: 20, steps: 8)
-                                .frame(height: 180)
+                            .frame(height: 180)
                     }
                     .frame(height: 300)
                     .clipped()
-                    
+
                     // Overlay (keep this)
                     LinearGradient(
                         colors: [.clear, .black.opacity(0.9)],
                         startPoint: .top,
                         endPoint: .bottom
                     )
-                    
+
                     VStack(alignment: .leading, spacing: 8) {
                         KFImage(movieInfo?.posterURL)
                             .placeholder {
@@ -166,14 +170,15 @@ struct MovieSreamInfo: View {
                             .scaledToFill()
                             .frame(width: 60, height: 90)
                             .clipShape(RoundedRectangle(cornerRadius: 8))
-                        
+
                         Text(movieInfo?.title ?? "Unknown")
                             .font(.title)
                             .bold()
                             .foregroundColor(.white)
-                        
+
                         if let year = movieInfo?.releaseYear,
-                           let duration = movieInfo?.duration {
+                           let duration = movieInfo?.duration
+                        {
                             Text("\(year) • \(formatTime(duration))")
                                 .foregroundColor(.gray)
                                 .font(.subheadline)
@@ -181,9 +186,8 @@ struct MovieSreamInfo: View {
                     }
                     .padding()
                 }
-                
+
                 VStack(alignment: .leading, spacing: 12) {
-                    
                     // Resume Button
                     if let sessionInfo {
                         Button {
@@ -205,12 +209,12 @@ struct MovieSreamInfo: View {
                         .background(Color.white)
                         .foregroundColor(.black)
                         .clipShape(RoundedRectangle(cornerRadius: 10))
-                        
+
                         // Progress
                         ProgressView(value: sessionInfo.progress)
                             .tint(.white)
                     }
-                    
+
                     HStack {
                         // Bookmark
                         Button {
@@ -221,15 +225,15 @@ struct MovieSreamInfo: View {
                                     Bookmarks(
                                         movieId: movieInfo?.id ?? "undefined",
                                         profile: "Andre"
-                                    ), at: 0)
+                                    ), at: 0
+                                )
                             }
                             // Bookmark Change
                         } label: {
                             HStack {
                                 if bookmarkInfo?.id != nil {
                                     Image(systemName: "checkmark")
-                                }
-                                else {
+                                } else {
                                     Image(systemName: "plus")
                                 }
                             }
@@ -240,16 +244,15 @@ struct MovieSreamInfo: View {
                         .background(Color.white)
                         .foregroundColor(.black)
                         .clipShape(Circle())
-                        
+
                         // Like
                         Button {
                             // Bookmark Change
                         } label: {
                             HStack {
-                                if (false) {
+                                if false {
                                     Image(systemName: "heart.fill")
-                                }
-                                else {
+                                } else {
                                     Image(systemName: "heart")
                                 }
                             }
@@ -260,7 +263,7 @@ struct MovieSreamInfo: View {
                         .background(Color.white)
                         .foregroundColor(.black)
                         .clipShape(Circle())
-                        
+
                         // Share
                         Button {
                             // Bookmark Change
@@ -275,15 +278,14 @@ struct MovieSreamInfo: View {
                         .background(Color.white)
                         .foregroundColor(.black)
                         .clipShape(Circle())
-                        
+
                         Button {
                             // Notification Button release
                         } label: {
                             HStack {
-                                if (false) {
+                                if false {
                                     Image(systemName: "bell.fill")
-                                }
-                                else {
+                                } else {
                                     Image(systemName: "bell")
                                 }
                             }
@@ -295,10 +297,10 @@ struct MovieSreamInfo: View {
                         .foregroundColor(.black)
                         .clipShape(Circle())
                     }
-                    
+
                     // Service
                     // **Service badge** (elevated)
-                    
+
                     // **Key facts grid**
                     HStack(spacing: 24) {
                         if let serviceInfo {
@@ -314,7 +316,7 @@ struct MovieSreamInfo: View {
                             .clipShape(RoundedRectangle(cornerRadius: 20))
                         }
                     }
-                    
+
                     // Replace your single service badge with this:
                     if let serviceIds = movieInfo?.serviceIds {
                         VStack(alignment: .leading, spacing: 12) {
@@ -323,7 +325,7 @@ struct MovieSreamInfo: View {
                                     .font(.headline.weight(.semibold))
                                     .foregroundStyle(.white)
                             }
-                            
+
                             ScrollView(.horizontal, showsIndicators: false) {
                                 LazyHGrid(rows: [GridItem(.fixed(60))], spacing: 12) {
                                     ForEach(serviceIds, id: \.self) { serviceId in
@@ -342,14 +344,14 @@ struct MovieSreamInfo: View {
                             }
                         }
                     }
-                    
+
                     // Description
                     if let desc = movieInfo?.description {
                         Text(desc)
                             .foregroundColor(.gray)
                             .font(.body)
                     }
-                    
+
                     // Ratings
                     if let ratings = movieInfo?.ratings {
                         HStack(spacing: 12) {
@@ -358,7 +360,7 @@ struct MovieSreamInfo: View {
                                     Text(rating.source)
                                         .font(.caption2)
                                         .foregroundColor(.gray)
-                                    
+
                                     Text("\(Int(rating.value))")
                                         .bold()
                                         .foregroundColor(.white)
@@ -366,7 +368,7 @@ struct MovieSreamInfo: View {
                             }
                         }
                     }
-                    
+
                     // **Genres** (chips)
                     if let genres = movieInfo?.genres {
                         LazyHGrid(rows: [GridItem(.adaptive(minimum: 80))], spacing: 8) {
@@ -380,7 +382,7 @@ struct MovieSreamInfo: View {
                             }
                         }
                     }
-                    
+
                     // **Cast** (horizontal scroll)
                     HStack {
                         Text("Cast").font(.headline.weight(.semibold))
@@ -389,7 +391,7 @@ struct MovieSreamInfo: View {
                             .font(.caption.weight(.medium))
                             .foregroundStyle(.secondary)
                     }
-                    
+
                     ScrollView(.horizontal, showsIndicators: false) {
                         LazyHGrid(rows: [GridItem(.fixed(120))], spacing: 12) {
                             if let cast = movieInfo?.starring {
@@ -408,7 +410,7 @@ struct MovieSreamInfo: View {
                             }
                         }
                     }
-                    
+
                     // **Cast** (horizontal scroll)
                     HStack {
                         Text("Directors").font(.headline.weight(.semibold))
@@ -417,7 +419,7 @@ struct MovieSreamInfo: View {
                             .font(.caption.weight(.medium))
                             .foregroundStyle(.secondary)
                     }
-                    
+
                     ScrollView(.horizontal, showsIndicators: false) {
                         LazyHGrid(rows: [GridItem(.fixed(120))], spacing: 12) {
                             if let cast = movieInfo?.directors {
@@ -436,9 +438,9 @@ struct MovieSreamInfo: View {
                             }
                         }
                     }
-                    
+
                     // Tabs
-                    if filteredTabsBinding.count > 0 {
+                    if !filteredTabsBinding.isEmpty {
                         HStack {
                             Image(systemName: "list.bullet")
                             Text("Queue")
@@ -462,7 +464,7 @@ struct MovieSreamInfo: View {
 
 #Preview {
     let movietabs = MovieTabs.examplesMovie()
-    
+
     MovieSreamInfo(
         currWindow: .constant(WindowType(
             id: movietabs[0].id,
@@ -476,4 +478,3 @@ struct MovieSreamInfo: View {
         services: Service.examples()
     )
 }
-

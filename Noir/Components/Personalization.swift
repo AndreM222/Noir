@@ -1,5 +1,5 @@
 //
-//  User.swift
+//  Personalization.swift
 //  NoirBrowser
 //
 //  Created by Andre Mossi on 4/1/26.
@@ -12,19 +12,19 @@ enum AvatarColor: String, CaseIterable {
 
     var gradient: Gradient {
         switch self {
-        case .zen:    Gradient(colors: [.blue, .purple.opacity(0.7)])
-        case .fire:   Gradient(colors: [.red, .orange.opacity(0.8)])
-        case .ocean:  Gradient(colors: [.cyan, .blue.opacity(0.8)])
+        case .zen: Gradient(colors: [.blue, .purple.opacity(0.7)])
+        case .fire: Gradient(colors: [.red, .orange.opacity(0.8)])
+        case .ocean: Gradient(colors: [.cyan, .blue.opacity(0.8)])
         case .cosmic: Gradient(colors: [.purple, .blue.opacity(0.5)])
-        case .neon:   Gradient(colors: [.pink, .purple.opacity(0.9)])
-        case .slate:  Gradient(colors: [
-            Color(red: 0.55, green: 0.58, blue: 0.63),
-            Color(red: 0.35, green: 0.37, blue: 0.42)
-        ])
-        case .gold:   Gradient(colors: [
-            Color(red: 1.0,  green: 0.84, blue: 0.41),
-            Color(red: 0.83, green: 0.60, blue: 0.18)
-        ])
+        case .neon: Gradient(colors: [.pink, .purple.opacity(0.9)])
+        case .slate: Gradient(colors: [
+                Color(red: 0.55, green: 0.58, blue: 0.63),
+                Color(red: 0.35, green: 0.37, blue: 0.42)
+            ])
+        case .gold: Gradient(colors: [
+                Color(red: 1.0, green: 0.84, blue: 0.41),
+                Color(red: 0.83, green: 0.60, blue: 0.18)
+            ])
         }
     }
 }
@@ -38,7 +38,7 @@ struct AvatarIconPicker: View {
             LazyVGrid(columns: columns, spacing: 6) {
                 ForEach(AvatarIcon.allCases, id: \.self) { icon in
                     let isSelected = selected == icon
-                    
+
                     Button {
                         withAnimation(.spring(response: 0.28, dampingFraction: 0.75)) {
                             selected = icon
@@ -56,7 +56,10 @@ struct AvatarIconPicker: View {
                             )
                             .overlay(
                                 Image(systemName: icon.systemName)
-                                    .font(.system(size: 14, weight: isSelected ? .semibold : .regular))
+                                    .font(.system(
+                                        size: 14,
+                                        weight: isSelected ? .semibold : .regular
+                                    ))
                                     .foregroundStyle(isSelected ? .white : .white.opacity(0.45))
                             )
                     }
@@ -81,7 +84,7 @@ struct AvatarIconPicker: View {
     }
 }
 
-// Accent picker
+/// Accent picker
 struct AccentColorPicker: View {
     @Binding var selected: AvatarColor
 
@@ -98,11 +101,11 @@ struct AccentColorPicker: View {
                     Rectangle()
                         .fill(
                             isSelected ?
-                            LinearGradient(
-                                gradient: color.gradient,
-                                startPoint: .topLeading,
-                                endPoint: .bottomTrailing
-                            ) :
+                                LinearGradient(
+                                    gradient: color.gradient,
+                                    startPoint: .topLeading,
+                                    endPoint: .bottomTrailing
+                                ) :
                                 LinearGradient(
                                     gradient: Gradient(colors: [.gray.opacity(0.2)]),
                                     startPoint: .topLeading,
@@ -136,71 +139,71 @@ struct AccentColorPicker: View {
 }
 
 enum AvatarIcon: String, CaseIterable {
-    // Nature
+    /// Nature
     case leaf, flame, drop, snowflake, sun, moon, cloud, wind, tornado, tree
-    // Space
+    /// Space
     case sparkles, star, moon2, planet, telescope, infinity
-    // Energy
+    /// Energy
     case bolt, bolt2, waveform, antenna, cpu, atom
-    // Animals
+    /// Animals
     case bird, fish, tortoise, hare, ant, pawprint
-    // Symbols
+    /// Symbols
     case person, heart, crown, shield, diamond, seal, tag, flag
-    // Objects
+    /// Objects
     case camera, music, headphones, gamecontroller, paintpalette, books, eye, glasses
 
     var systemName: String {
         switch self {
         // Nature
-        case .leaf:           return "leaf.fill"
-        case .flame:          return "flame.fill"
-        case .drop:           return "drop.fill"
-        case .snowflake:      return "snowflake"
-        case .sun:            return "sun.max.fill"
-        case .moon:           return "moon.fill"
-        case .cloud:          return "cloud.fill"
-        case .wind:           return "wind"
-        case .tornado:        return "tornado"
-        case .tree:           return "tree.fill"
+        case .leaf: "leaf.fill"
+        case .flame: "flame.fill"
+        case .drop: "drop.fill"
+        case .snowflake: "snowflake"
+        case .sun: "sun.max.fill"
+        case .moon: "moon.fill"
+        case .cloud: "cloud.fill"
+        case .wind: "wind"
+        case .tornado: "tornado"
+        case .tree: "tree.fill"
         // Space
-        case .sparkles:       return "sparkles"
-        case .star:           return "star.fill"
-        case .moon2:          return "moon.stars.fill"
-        case .planet:         return "globe.americas.fill"
-        case .telescope:      return "teletype"
-        case .infinity:       return "infinity"
+        case .sparkles: "sparkles"
+        case .star: "star.fill"
+        case .moon2: "moon.stars.fill"
+        case .planet: "globe.americas.fill"
+        case .telescope: "teletype"
+        case .infinity: "infinity"
         // Energy
-        case .bolt:           return "bolt.fill"
-        case .bolt2:          return "bolt.circle.fill"
-        case .waveform:       return "waveform"
-        case .antenna:        return "antenna.radiowaves.left.and.right"
-        case .cpu:            return "cpu.fill"
-        case .atom:           return "atom"
+        case .bolt: "bolt.fill"
+        case .bolt2: "bolt.circle.fill"
+        case .waveform: "waveform"
+        case .antenna: "antenna.radiowaves.left.and.right"
+        case .cpu: "cpu.fill"
+        case .atom: "atom"
         // Animals
-        case .bird:           return "bird.fill"
-        case .fish:           return "fish.fill"
-        case .tortoise:       return "tortoise.fill"
-        case .hare:           return "hare.fill"
-        case .ant:            return "ant.fill"
-        case .pawprint:       return "pawprint.fill"
+        case .bird: "bird.fill"
+        case .fish: "fish.fill"
+        case .tortoise: "tortoise.fill"
+        case .hare: "hare.fill"
+        case .ant: "ant.fill"
+        case .pawprint: "pawprint.fill"
         // Symbols
-        case .person:         return "person.fill"
-        case .heart:          return "heart.fill"
-        case .crown:          return "crown.fill"
-        case .shield:         return "shield.fill"
-        case .diamond:        return "diamond.fill"
-        case .seal:           return "seal.fill"
-        case .tag:            return "tag.fill"
-        case .flag:           return "flag.fill"
+        case .person: "person.fill"
+        case .heart: "heart.fill"
+        case .crown: "crown.fill"
+        case .shield: "shield.fill"
+        case .diamond: "diamond.fill"
+        case .seal: "seal.fill"
+        case .tag: "tag.fill"
+        case .flag: "flag.fill"
         // Objects
-        case .camera:         return "camera.fill"
-        case .music:          return "music.note"
-        case .headphones:     return "headphones"
-        case .gamecontroller: return "gamecontroller.fill"
-        case .paintpalette:   return "paintpalette.fill"
-        case .books:          return "books.vertical.fill"
-        case .eye:            return "eye.fill"
-        case .glasses:        return "glasses"
+        case .camera: "camera.fill"
+        case .music: "music.note"
+        case .headphones: "headphones"
+        case .gamecontroller: "gamecontroller.fill"
+        case .paintpalette: "paintpalette.fill"
+        case .books: "books.vertical.fill"
+        case .eye: "eye.fill"
+        case .glasses: "glasses"
         }
     }
 }
@@ -212,27 +215,45 @@ struct AvatarConfig {
     let size: CGFloat
     let radius: CGFloat
 
-    var gradient: Gradient { color.gradient }
-    var iconName: String { icon.systemName }
+    var gradient: Gradient {
+        color.gradient
+    }
+
+    var iconName: String {
+        icon.systemName
+    }
 }
 
 struct UserAvatar: View {
     let config: AvatarConfig
     @State private var isHovering = false
-    
-    private var size: CGFloat { config.size }
-    
+
+    private var size: CGFloat {
+        config.size
+    }
+
     var body: some View {
         Image(systemName: config.iconName.isEmpty ? "person.fill" : config.iconName)
             .font(.system(size: size * 0.55))
-            .foregroundStyle(.linearGradient(config.gradient, startPoint: .topLeading, endPoint: .bottomTrailing))
+            .foregroundStyle(.linearGradient(
+                config.gradient,
+                startPoint: .topLeading,
+                endPoint: .bottomTrailing
+            ))
             .frame(width: size, height: size)
             .background(
                 Circle()
                     .fill(.ultraThinMaterial)
                     .overlay(
                         Circle()
-                            .stroke(.linearGradient(config.gradient, startPoint: .topLeading, endPoint: .bottomTrailing), lineWidth: 1.2)
+                            .stroke(
+                                .linearGradient(
+                                    config.gradient,
+                                    startPoint: .topLeading,
+                                    endPoint: .bottomTrailing
+                                ),
+                                lineWidth: 1.2
+                            )
                     )
             )
             .scaleEffect(isHovering ? 1.08 : 1.0)
@@ -245,9 +266,14 @@ struct UserAvatar: View {
 struct ProfileCard: View {
     let config: AvatarConfig
     @State private var isHovering = false
-    
-    private var size: CGFloat { config.size }
-    private var radius: CGFloat { config.radius }
+
+    private var size: CGFloat {
+        config.size
+    }
+
+    private var radius: CGFloat {
+        config.radius
+    }
 
     var body: some View {
         VStack(spacing: 12) {
@@ -258,12 +284,11 @@ struct ProfileCard: View {
                 size: size * 0.7,
                 radius: radius
             ))
-            
+
             VStack(spacing: 4) {
                 Text(config.name)
                     .font(.system(.headline, design: .rounded, weight: .semibold))
                     .foregroundStyle(.primary)
-                
             }
         }
         .padding(.horizontal, 8)
@@ -272,11 +297,19 @@ struct ProfileCard: View {
         .background(
             RoundedRectangle(cornerRadius: radius, style: .continuous)
                 .fill(LinearGradient(
-                    gradient: Gradient(colors: [Color.gray.opacity(0.1), Color.black.opacity(0.3)]), startPoint: .topLeading, endPoint: .bottomTrailing
+                    gradient: Gradient(colors: [Color.gray.opacity(0.1), Color.black.opacity(0.3)]),
+                    startPoint: .topLeading, endPoint: .bottomTrailing
                 ))
                 .overlay(
                     RoundedRectangle(cornerRadius: radius, style: .continuous)
-                        .stroke(.linearGradient(config.gradient, startPoint: .topLeading, endPoint: .bottomTrailing).opacity(isHovering ? 0.75 : 0.55), lineWidth: 1)
+                        .stroke(
+                            .linearGradient(
+                                config.gradient,
+                                startPoint: .topLeading,
+                                endPoint: .bottomTrailing
+                            ).opacity(isHovering ? 0.75 : 0.55),
+                            lineWidth: 1
+                        )
                 )
         )
         .scaleEffect(isHovering ? 1.02 : 1.0)
@@ -286,14 +319,18 @@ struct ProfileCard: View {
     }
 }
 
-
 struct UserCard: View {
     let config: AvatarConfig
     let subtitle: String
     @State private var isHovering = false
-    
-    private var size: CGFloat { config.size }
-    private var radius: CGFloat { config.radius }
+
+    private var size: CGFloat {
+        config.size
+    }
+
+    private var radius: CGFloat {
+        config.radius
+    }
 
     var body: some View {
         VStack(spacing: 12) {
@@ -306,7 +343,14 @@ struct UserCard: View {
                     .background(.ultraThinMaterial)
                     .overlay(
                         RoundedRectangle(cornerRadius: radius, style: .continuous)
-                            .stroke(.linearGradient(config.gradient, startPoint: .topLeading, endPoint: .bottomTrailing).opacity(isHovering ? 0.75 : 0.55), lineWidth: 1)
+                            .stroke(
+                                .linearGradient(
+                                    config.gradient,
+                                    startPoint: .topLeading,
+                                    endPoint: .bottomTrailing
+                                ).opacity(isHovering ? 0.75 : 0.55),
+                                lineWidth: 1
+                            )
                     )
                     .clipShape(RoundedRectangle(cornerRadius: radius, style: .continuous))
             }
@@ -320,30 +364,29 @@ struct UserCard: View {
                 size: size * 0.7,
                 radius: radius
             ))
-            
+
             VStack(spacing: 4) {
                 Text(config.name)
                     .font(.system(.headline, design: .rounded, weight: .semibold))
                     .foregroundStyle(.primary)
-                
+
                 HStack(spacing: 4) {
                     Text("Status")
                         .font(.caption)
                         .foregroundStyle(.secondary)
-                    
+
                     Text(subtitle)
                         .font(.caption2)
                         .foregroundStyle(.tertiary)
                 }
-                
             }
-            
+
             Spacer()
             HStack(spacing: 4) {
                 Image(systemName: "calendar")
                     .font(.caption)
                     .foregroundStyle(.secondary)
-                
+
                 Text("March 27, 2024")
                     .font(.caption2)
                     .foregroundStyle(.tertiary)
@@ -355,11 +398,19 @@ struct UserCard: View {
         .background(
             RoundedRectangle(cornerRadius: radius, style: .continuous)
                 .fill(LinearGradient(
-                    gradient: Gradient(colors: [Color.gray.opacity(0.1), Color.black.opacity(0.3)]), startPoint: .topLeading, endPoint: .bottomTrailing
+                    gradient: Gradient(colors: [Color.gray.opacity(0.1), Color.black.opacity(0.3)]),
+                    startPoint: .topLeading, endPoint: .bottomTrailing
                 ))
                 .overlay(
                     RoundedRectangle(cornerRadius: radius, style: .continuous)
-                        .stroke(.linearGradient(config.gradient, startPoint: .topLeading, endPoint: .bottomTrailing).opacity(isHovering ? 0.75 : 0.55), lineWidth: 1)
+                        .stroke(
+                            .linearGradient(
+                                config.gradient,
+                                startPoint: .topLeading,
+                                endPoint: .bottomTrailing
+                            ).opacity(isHovering ? 0.75 : 0.55),
+                            lineWidth: 1
+                        )
                 )
         )
         .scaleEffect(isHovering ? 1.02 : 1.0)
@@ -375,7 +426,7 @@ struct UserCard: View {
 
     VStack(spacing: 16) {
         AccentColorPicker(selected: $selectedColor)
-        
+
         HStack(spacing: 16) {
             UserAvatar(
                 config: AvatarConfig(
@@ -397,7 +448,7 @@ struct UserCard: View {
                 ),
                 subtitle: "Premium User"
             )
-            
+
             ProfileCard(
                 config: AvatarConfig(
                     color: .neon,
@@ -408,7 +459,7 @@ struct UserCard: View {
                 )
             )
         }
-        
+
         AvatarIconPicker(selected: $selectedIcon)
     }
     .frame(height: 500)

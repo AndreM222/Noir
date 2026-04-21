@@ -1,13 +1,13 @@
 //
-//  SidebarView.swift
+//  TabsListView.swift
 //  NoirBrowser
 //
 //  Created by Andre Mossi on 3/27/26.
 //
 
-import SwiftUI
-import Kingfisher
 internal import UniformTypeIdentifiers
+import Kingfisher
+import SwiftUI
 
 struct TabsListView: View {
     @Binding var currWindow: WindowType
@@ -15,10 +15,10 @@ struct TabsListView: View {
     @Binding var session: [WatchSession]
     let movies: [Movie]
     let services: [Service]
-    
+
     @State private var draggedTab: MovieTabs?
     @State private var hoveredTabIDs: Set<UUID> = []
-    
+
     var body: some View {
         ScrollView {
             VStack {
@@ -37,7 +37,7 @@ struct TabsListView: View {
                         )
                 }
                 .buttonStyle(.plain)
-                
+
                 ForEach(tabs) { tab in
                     TabCard(
                         tabs: $tabs,
@@ -51,16 +51,20 @@ struct TabsListView: View {
                         onDelete: { deleteTab(tab: tab) }
                     )
                     .transition(.asymmetric(
-                        insertion: .scale.combined(with: .opacity).combined(with: .move(edge: .top)),
+                        insertion: .scale.combined(with: .opacity)
+                            .combined(with: .move(edge: .top)),
                         removal: .scale.combined(with: .opacity).combined(with: .move(edge: .top))
                     ))
                     .animation(.spring(response: 0.35, dampingFraction: 0.82), value: tabs)
-                    .onDrag{
+                    .onDrag {
                         draggedTab = tab
                         haptic(.impact)
                         return NSItemProvider(object: tab.id.uuidString as NSString)
                     }
-                    .onDrop(of: [.text], delegate: TabDropDelegate(item: tab, tabs: $tabs, draggedItem: $draggedTab))
+                    .onDrop(
+                        of: [.text],
+                        delegate: TabDropDelegate(item: tab, tabs: $tabs, draggedItem: $draggedTab)
+                    )
                 }
             }
             .padding(.horizontal, 10)
@@ -86,17 +90,17 @@ func addTab(
 ) -> UUID {
     // Find all tabs for this movie
     let filteredTabs = tabs.wrappedValue.filter { $0.movieId == movieId }
-    
+
     // Find all sessions for those tabs
     let sessionsForMovie = session.wrappedValue.filter { tabSession in
         filteredTabs.contains(where: { $0.id == tabSession.id })
     }
-    
+
     // Check if the service already exists for this movie
     if let tabFiltered = sessionsForMovie.first(where: { $0.serviceId == service }) {
         return tabFiltered.id
     }
-    
+
     // Create new tab and session
     let newTab = MovieTabs(movieId: movieId)
     let newSession = WatchSession(
@@ -108,10 +112,10 @@ func addTab(
         isBookmarked: true,
         url: URL(string: "https://www.netflix.com/watch/123")!
     )
-    
+
     tabs.wrappedValue.insert(newTab, at: 0)
     session.wrappedValue.insert(newSession, at: 0)
-    
+
     return newTab.id
 }
 
@@ -119,8 +123,8 @@ private struct TabDropDelegate: DropDelegate {
     let item: MovieTabs
     @Binding var tabs: [MovieTabs]
     @Binding var draggedItem: MovieTabs?
-    
-    func dropEntered(info: DropInfo) {
+
+    func dropEntered(info _: DropInfo) {
         guard let draggedItem,
               draggedItem != item,
               let fromIndex = tabs.firstIndex(of: draggedItem),
@@ -139,15 +143,15 @@ private struct TabDropDelegate: DropDelegate {
         }
     }
 
-    func performDrop(info: DropInfo) -> Bool {
+    func performDrop(info _: DropInfo) -> Bool {
         draggedItem = nil
         haptic(.success)
         return true
     }
 }
 
-extension TabsListView {
-    fileprivate func deleteTab(tab: MovieTabs) {
+private extension TabsListView {
+    func deleteTab(tab: MovieTabs) {
         withAnimation(.spring(response: 0.35)) {
             session.removeAll { $0.id == tab.id }
             tabs.removeAll { $0.id == tab.id }
@@ -165,16 +169,28 @@ struct TabCard: View {
     let movie: [Movie]
     let services: [Service]
     let onDelete: () -> Void
-    
-    private var isDragging: Bool { draggedItem?.id == tab.id }
-    private var movieInfo: Movie? { movie.first { $0.id == tab.movieId } }
-    private var sessionInfo: WatchSession? { session.first { $0.id == tab.id } }
+
+    private var isDragging: Bool {
+        draggedItem?.id == tab.id
+    }
+
+    private var movieInfo: Movie? {
+        movie.first { $0.id == tab.movieId }
+    }
+
+    private var sessionInfo: WatchSession? {
+        session.first { $0.id == tab.id }
+    }
+
     private var serviceInfo: Service? {
         guard let serviceId = sessionInfo?.serviceId else { return nil }
         return services.first { $0.id == serviceId }
     }
-    private var isHovered: Bool { hoveredTabIDs.contains(tab.id) && draggedItem == nil }
-    
+
+    private var isHovered: Bool {
+        hoveredTabIDs.contains(tab.id) && draggedItem == nil
+    }
+
     var body: some View {
         Button {
             switchTab(tabId: tab.id, movieId: tab.movieId, currWindow: $currWindow)
@@ -237,12 +253,16 @@ struct TabCard: View {
             .contentShape(Rectangle())
         }
         .buttonStyle(.plain)
-        .shadow(color: .black.opacity(isDragging ? 0.25 : 0.12), radius: isDragging ? 16 : 8, y: isDragging ? 8 : 4)
+        .shadow(
+            color: .black.opacity(isDragging ? 0.25 : 0.12),
+            radius: isDragging ? 16 : 8,
+            y: isDragging ? 8 : 4
+        )
         .animation(.spring(response: 0.28, dampingFraction: 0.82), value: isDragging)
         .background(
             currWindow.id == tab.id
-            ? Color.gray.opacity(0.05)
-            : Color.black.opacity(0.2)
+                ? Color.gray.opacity(0.05)
+                : Color.black.opacity(0.2)
         )
         .clipShape(RoundedRectangle(cornerRadius: 12))
         .overlay(
@@ -290,4 +310,3 @@ struct TabsListPreview: View {
         )
     }
 }
-

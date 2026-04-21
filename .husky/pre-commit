@@ -1,0 +1,2 @@
+npx swiftformat .
+npx swiftlint

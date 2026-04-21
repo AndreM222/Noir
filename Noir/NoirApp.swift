@@ -1,12 +1,12 @@
 //
-//  NoirBrowserApp.swift
+//  NoirApp.swift
 //  NoirBrowser
 //
 //  Created by Andre Mossi on 3/27/26.
 //
 
-import SwiftUI
 import Combine
+import SwiftUI
 
 final class AppUIState: ObservableObject {
     @Published var showingQuitDialog = false
@@ -24,12 +24,13 @@ struct NoirApp: App {
         let profilesExample = Profile.examples(account: accountExample)
 
         _account = State(initialValue: accountExample.first)
-        _profiles = State(initialValue: profilesExample.filter { $0.account == accountExample.first?.id })
+        _profiles = State(initialValue: profilesExample
+            .filter { $0.account == accountExample.first?.id })
     }
 
     var body: some Scene {
         WindowGroup {
-            ContentView(account: $account, )
+            ContentView(account: $account)
                 .environmentObject(uiState)
                 .edgesIgnoringSafeArea(.vertical)
         }
@@ -60,4 +61,3 @@ struct NoirApp: App {
         .windowStyle(.hiddenTitleBar)
     }
 }
-

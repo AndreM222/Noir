@@ -1,5 +1,5 @@
 //
-//  AccountInfo.swift
+//  AccountWindow.swift
 //  NoirBrowser
 //
 //  Created by Andre Mossi on 4/11/26.
@@ -8,8 +8,8 @@
 import SwiftUI
 
 struct AccountSection: View {
-    var account : Account
-    
+    var account: Account
+
     var body: some View {
         HStack(alignment: .top, spacing: 14) {
             UserCard(
@@ -32,9 +32,9 @@ struct AccountSection: View {
                             .font(.system(size: 12))
                             .foregroundStyle(.white.opacity(0.45))
                     }
-                    
+
                     Spacer()
-                    
+
                     Button("Sign out") {}
                         .font(.system(size: 12, weight: .medium))
                         .foregroundStyle(.white.opacity(0.5))
@@ -57,7 +57,7 @@ struct AccountSection: View {
                                 .stroke(.white.opacity(0.08), lineWidth: 0.5)
                         )
                 )
-                
+
                 // Version card
                 SectionCard(title: "Version", icon: "number") {
                     HStack {
@@ -81,14 +81,13 @@ struct AccountSection: View {
 
 private struct AccountPreview: View {
     @State var account: Account?
-    
+
     init() {
         let accountExample = Account.examples()
-        
+
         _account = State(initialValue: accountExample[0])
     }
-    
-    
+
     var body: some View {
         ZStack(alignment: .center) {
             Rectangle()

@@ -22,7 +22,6 @@ struct ContentView: View {
     @Binding var account: Account?
     @EnvironmentObject var uiState: AppUIState
 
-
     @Environment(\.openSettings) private var openSettings
     @Environment(\.openWindow) private var openWindow
 
@@ -30,7 +29,11 @@ struct ContentView: View {
         let initialTabs = MovieTabs.examplesMovie()
         _tabs = State(initialValue: initialTabs)
         if let firstTab = initialTabs.first {
-            _currWindow = State(initialValue: WindowType(id: firstTab.id, type: "tab", movieId: firstTab.movieId))
+            _currWindow = State(initialValue: WindowType(
+                id: firstTab.id,
+                type: "tab",
+                movieId: firstTab.movieId
+            ))
         } else {
             _currWindow = State(initialValue: WindowType(id: nil, type: "tab"))
         }
@@ -45,16 +48,35 @@ struct ContentView: View {
         ZStack {
             Text("yay")
             NavigationSplitView {
-                SidebarView(currWindow: $currWindow, bookmarks: $bookmarks, tabs: $tabs, sessions: $sessions)
-                    .navigationSplitViewColumnWidth(min: 220, ideal: 260, max: 320)
-                    .background(SidebarBackground())
+                SidebarView(
+                    currWindow: $currWindow,
+                    bookmarks: $bookmarks,
+                    tabs: $tabs,
+                    sessions: $sessions
+                )
+                .navigationSplitViewColumnWidth(min: 220, ideal: 260, max: 320)
+                .background(SidebarBackground())
             } detail: {
                 HStack {
                     switch currWindow.type {
                     case "tab":
-                        MovieSreamInfo(currWindow: $currWindow, tabs: $tabs, bookmarks: $bookmarks, movie: Movie.examplesMovie(), sessions: $sessions, services: Service.examples())
+                        MovieSreamInfo(
+                            currWindow: $currWindow,
+                            tabs: $tabs,
+                            bookmarks: $bookmarks,
+                            movie: Movie.examplesMovie(),
+                            sessions: $sessions,
+                            services: Service.examples()
+                        )
                     case "movie":
-                        MovieSreamInfo(currWindow: $currWindow, tabs: $tabs, bookmarks: $bookmarks, movie: Movie.examplesMovie(), sessions: $sessions, services: Service.examples())
+                        MovieSreamInfo(
+                            currWindow: $currWindow,
+                            tabs: $tabs,
+                            bookmarks: $bookmarks,
+                            movie: Movie.examplesMovie(),
+                            sessions: $sessions,
+                            services: Service.examples()
+                        )
                     default:
                         HStack { Text("NOIR") }
                     }
@@ -67,7 +89,7 @@ struct ContentView: View {
                     ZStack {
                         CustomBackground()
                     }
-                        .ignoresSafeArea()
+                    .ignoresSafeArea()
                 )
                 .overlay(alignment: .topTrailing) {
                     HStack {
@@ -107,8 +129,8 @@ struct ContentView: View {
 }
 
 #Preview {
-      let uiState = AppUIState()
-      uiState.showingQuitDialog = false
-      return ContentView(account: .constant(Account.examples().first!))
-          .environmentObject(uiState)
-  }
+    let uiState = AppUIState()
+    uiState.showingQuitDialog = false
+    return ContentView(account: .constant(Account.examples().first!))
+        .environmentObject(uiState)
+}

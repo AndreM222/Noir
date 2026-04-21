@@ -5,14 +5,14 @@
 //  Created by Andre Mossi on 4/2/26.
 //
 
-import SwiftUI
 import Combine
+import SwiftUI
 
 struct DeviceButton: View {
     @Binding var open: Bool
     var deviceInfo: StreamingDevice?
     var deviceIcon: String
-    
+
     var body: some View {
         Button {
             withAnimation(.spring(response: 0.38, dampingFraction: 0.84)) {
@@ -29,13 +29,13 @@ struct DeviceButton: View {
                         RoundedRectangle(cornerRadius: 12)
                             .stroke(.white.opacity(0.1), lineWidth: 0.5)
                     )
-                
+
                 VStack(alignment: .leading, spacing: 1) {
                     HStack(spacing: 6) {
                         Text(deviceInfo?.name ?? "No Device")
                             .font(.system(.body, design: .rounded, weight: .medium))
                             .foregroundStyle(.primary)
-                        
+
                         if deviceInfo?.id == currentDevice().id {
                             Text("Current")
                                 .font(.caption2)
@@ -46,14 +46,16 @@ struct DeviceButton: View {
                                 .clipShape(Capsule())
                         }
                     }
-                    
+
                     Text(deviceInfo?.subtitle ?? "")
                         .font(.system(.caption2, design: .rounded))
                         .foregroundStyle(.secondary.opacity(0.8))
                 }
-                
+
                 Spacer()
-                
+
+                WifiStatus()
+
                 Image(systemName: "chevron.down")
                     .font(.system(size: 12, weight: .medium))
                     .rotationEffect(.degrees(open ? 180 : 0))
@@ -74,12 +76,12 @@ struct DeviceBar: View {
     @State private var selectedDeviceID: StreamingDevice.ID?
     @State private var openWindow = false
     @State private var dragOffset: CGFloat = 0
-    
+
     init() {
         let initialDevices: [StreamingDevice] = StreamingDevice.devicesExample()
         _devices = State(initialValue: initialDevices)
     }
-    
+
     var body: some View {
         VStack(spacing: openWindow ? 4 : 0) {
             if openWindow {
@@ -104,9 +106,12 @@ struct DeviceBar: View {
                                 }
                             }
                     )
-                    .transition(.move(edge: .top).combined(with: .opacity).combined(with: .scale(scale: 0.95, anchor: .top)))
+                    .transition(.move(edge: .top).combined(with: .opacity).combined(with: .scale(
+                        scale: 0.95,
+                        anchor: .top
+                    )))
             }
-            
+
             DeviceButton(
                 open: $openWindow,
                 deviceInfo: devices.first(where: { $0.id == selectedDeviceID }),
@@ -117,7 +122,9 @@ struct DeviceBar: View {
         .glassBackgroundEffect()
         .onAppear {
             registerDevice(devices: &devices)
-            selectedDeviceID = devices.contains(where: { $0.id == currentDevice().id }) ? currentDevice().id : devices.first?.id
+            selectedDeviceID = devices
+                .contains(where: { $0.id == currentDevice().id }) ? currentDevice().id : devices
+                .first?.id
         }
     }
 }
@@ -136,6 +143,9 @@ extension View {
         )
     }
 }
+
 #Preview {
-    DeviceBar()
+    HStack {
+        DeviceBar()
+    }.frame(height: 500)
 }

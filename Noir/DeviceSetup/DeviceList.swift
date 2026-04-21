@@ -1,14 +1,13 @@
 //
-//  Device.swift
+//  DeviceList.swift
 //  NoirBrowser
 //
 //  Created by Andre Mossi on 4/1/26.
 //
 
-import SwiftUI
-
-import Foundation
 import AppKit
+import Foundation
+import SwiftUI
 
 private func getDeviceID() -> String {
     if let id = UserDefaults.standard.string(forKey: "device_id") {
@@ -26,7 +25,7 @@ private func getDeviceName() -> String {
 
 func getMacDeviceTypeId() -> String {
     let model = Host.current().localizedName ?? ""
-    
+
     if model.contains("MacBook") {
         return "macbook"
     } else {
@@ -36,34 +35,34 @@ func getMacDeviceTypeId() -> String {
 
 func getDeviceTypeId() -> String {
     #if os(macOS)
-    return getMacDeviceTypeId()
-    
+        return getMacDeviceTypeId()
+
     #elseif os(iOS)
-    switch UIDevice.current.userInterfaceIdiom {
-    case .phone:
-        return "iphone"
-    case .pad:
-        return "ipad"
-    case .tv:
-        return "appletv"
-    case .carPlay:
-        return "carplay"
-    default:
-        return "unknown"
-    }
-    
+        switch UIDevice.current.userInterfaceIdiom {
+        case .phone:
+            return "iphone"
+        case .pad:
+            return "ipad"
+        case .tv:
+            return "appletv"
+        case .carPlay:
+            return "carplay"
+        default:
+            return "unknown"
+        }
+
     #elseif os(tvOS)
-    return "appletv"
-    
+        return "appletv"
+
     #elseif os(watchOS)
-    return "watch"
-    
+        return "watch"
+
     #else
-    return "unknown"
+        return "unknown"
     #endif
 }
 
-func currentDevice() ->StreamingDevice {
+func currentDevice() -> StreamingDevice {
     StreamingDevice(
         id: UUID(uuidString: getDeviceID())?.uuidString ?? UUID().uuidString,
         name: getDeviceName(),
@@ -77,7 +76,7 @@ func getDeviceIcon(deviceId: String?) -> String {
     if deviceId == nil {
         return "questionmark"
     }
-    
+
     let deviceTypes: [DeviceTypes] = DeviceTypes.list()
 
     let deviceType = deviceTypes.first(where: { $0.id == deviceId })
@@ -87,7 +86,7 @@ func getDeviceIcon(deviceId: String?) -> String {
 
 func registerDevice(devices: inout [StreamingDevice]) {
     let currentId = getDeviceID()
-    
+
     if !devices.contains(where: { $0.id == currentId }) {
         let newDevice = StreamingDevice(
             id: currentDevice().id,
@@ -96,7 +95,7 @@ func registerDevice(devices: inout [StreamingDevice]) {
             deviceId: currentDevice().deviceId,
             isOnline: currentDevice().isOnline
         )
-        
+
         devices.append(newDevice)
     }
 }
@@ -104,16 +103,16 @@ func registerDevice(devices: inout [StreamingDevice]) {
 struct DeviceList: View {
     @Binding var selectedDeviceID: StreamingDevice.ID?
     @Binding var devices: [StreamingDevice]
-    
+
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
             HStack {
                 Text("Devices")
                     .font(.system(.title3, design: .rounded, weight: .semibold))
                     .foregroundStyle(.primary)
-                
+
                 Spacer()
-                
+
                 Button("Refresh") {
                     // scan
                 }
@@ -121,7 +120,7 @@ struct DeviceList: View {
                 .foregroundStyle(.secondary)
             }
             .padding(.bottom, 8)
-            
+
             LazyVStack(spacing: 8) {
                 ForEach(devices) { device in
                     DeviceRow(device: device, selectedDeviceID: $selectedDeviceID)
@@ -137,9 +136,10 @@ struct DeviceRow: View {
     let device: StreamingDevice
     @Binding var selectedDeviceID: StreamingDevice.ID?
     @State private var isHovering = false
-    
+
     var body: some View {
-        let controlOnly = DeviceTypes.list().first(where: { $0.id == device.deviceId })?.controlOnly ?? false
+        let controlOnly = DeviceTypes.list().first(where: { $0.id == device.deviceId })?
+            .controlOnly ?? false
         Button {
             withAnimation(.spring(response: 0.25)) {
                 selectedDeviceID = device.id
@@ -151,12 +151,12 @@ struct DeviceRow: View {
                     .frame(width: 36, height: 36)
                     .background(.white.opacity(isHovering ? 0.12 : 0.08))
                     .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
-                
+
                 VStack(alignment: .leading, spacing: 2) {
                     HStack(spacing: 6) {
                         Text(device.name)
                             .font(.system(.body, design: .rounded, weight: .medium))
-                        
+
                         if device.id == currentDevice().id {
                             Text("Current")
                                 .font(.caption2)
@@ -167,14 +167,14 @@ struct DeviceRow: View {
                                 .clipShape(Capsule())
                         }
                     }
-                    
+
                     Text(device.subtitle)
                         .font(.system(.caption2, design: .rounded))
                         .foregroundStyle(.secondary)
                 }
-                
+
                 Spacer()
-                
+
                 if selectedDeviceID == device.id {
                     Image(systemName: "checkmark.circle")
                         .font(.system(size: 18, weight: .medium))
@@ -197,6 +197,8 @@ struct DeviceRow: View {
 }
 
 #Preview {
-    DeviceList(selectedDeviceID: .constant(nil), devices: .constant(StreamingDevice.devicesExample()))
+    DeviceList(
+        selectedDeviceID: .constant(nil),
+        devices: .constant(StreamingDevice.devicesExample())
+    )
 }
-

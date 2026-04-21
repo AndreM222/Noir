@@ -1,0 +1,62 @@
+# included:
+#     - Noir
+#
+# excluded:
+#     - DerivedData
+#
+# opt_in_rules:
+#     - empty_count
+#     - explicit_init
+#     - sorted_imports
+#
+# line_length:
+#     warning: 100
+#     error: 120
+#
+# indentation_width:
+#     indentation_width: 4
+
+included:
+  - Noir
+
+excluded:
+  - DerivedData
+
+opt_in_rules:
+  - empty_count
+  - explicit_init
+
+# ✅ Naming (IMPORTANT for UI/math code)
+identifier_name:
+  min_length: 1
+  max_length: 40
+
+# ✅ Line length (single definition only)
+line_length:
+  warning: 120
+  error: 200
+
+# ✅ Structure limits (relaxed but useful)
+function_body_length:
+  warning: 80
+  error: 150
+
+type_body_length:
+  warning: 300
+  error: 500
+
+file_length:
+  warning: 500
+  error: 800
+
+# ✅ Formatting tweaks
+trailing_whitespace:
+  ignores_empty_lines: true
+
+# ✅ Disable noisy rules (early stage)
+disabled_rules:
+  - cyclomatic_complexity
+  - implicit_optional_initialization
+  - sorted_imports
+  - opening_brace
+  - for_where

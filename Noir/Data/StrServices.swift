@@ -19,7 +19,7 @@ struct Service: Identifiable, Hashable {
     var deepLinkScheme: String?
     var supportsProfiles: Bool
     var supportsDeepLinking: Bool
-    
+
     static func examples() -> [Service] {
         [
             Service(

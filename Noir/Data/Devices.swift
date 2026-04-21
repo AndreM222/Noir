@@ -12,7 +12,7 @@ struct DeviceTypes: Identifiable, Hashable {
     var name: String
     let controlOnly: Bool
     let icon: String
-    
+
     static func list() -> [DeviceTypes] {
         [
             // Mobile
@@ -28,7 +28,7 @@ struct DeviceTypes: Identifiable, Hashable {
                 controlOnly: false,
                 icon: "ipad"
             ),
-            
+
             // Computers
             DeviceTypes(
                 id: "macbook",
@@ -42,7 +42,7 @@ struct DeviceTypes: Identifiable, Hashable {
                 controlOnly: false,
                 icon: "desktopcomputer"
             ),
-            
+
             // Wearables
             DeviceTypes(
                 id: "watch",
@@ -50,7 +50,7 @@ struct DeviceTypes: Identifiable, Hashable {
                 controlOnly: true,
                 icon: "applewatch"
             ),
-            
+
             // TV / Media
             DeviceTypes(
                 id: "appletv",
@@ -64,7 +64,7 @@ struct DeviceTypes: Identifiable, Hashable {
                 controlOnly: false,
                 icon: "tv.fill"
             ),
-            
+
             // Audio Devices
             DeviceTypes(
                 id: "airpods",
@@ -84,7 +84,7 @@ struct DeviceTypes: Identifiable, Hashable {
                 controlOnly: false,
                 icon: "hifispeaker.fill"
             ),
-            
+
             // Car
             DeviceTypes(
                 id: "carplay",
@@ -92,7 +92,7 @@ struct DeviceTypes: Identifiable, Hashable {
                 controlOnly: false,
                 icon: "car.fill"
             ),
-            
+
             // Web / Browser
             DeviceTypes(
                 id: "browser",
@@ -100,7 +100,7 @@ struct DeviceTypes: Identifiable, Hashable {
                 controlOnly: false,
                 icon: "globe"
             ),
-            
+
             // Consoles (future expansion)
             DeviceTypes(
                 id: "console",
@@ -108,7 +108,7 @@ struct DeviceTypes: Identifiable, Hashable {
                 controlOnly: false,
                 icon: "gamecontroller.fill"
             ),
-            
+
             // Unknown
             DeviceTypes(
                 id: "unknown",
@@ -126,7 +126,7 @@ struct StreamingDevice: Identifiable, Hashable {
     let subtitle: String
     let deviceId: String
     var isOnline: Bool
-    
+
     static func devicesExample() -> [StreamingDevice] {
         [
             StreamingDevice(
@@ -153,4 +153,3 @@ struct StreamingDevice: Identifiable, Hashable {
         ]
     }
 }
-
