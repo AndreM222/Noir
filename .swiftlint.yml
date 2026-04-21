@@ -1,0 +1,20 @@
+included:
+  - Noir
+
+excluded:
+  - DerivedData
+
+opt_in_rules:
+  - empty_count
+  - explicit_init
+  - sorted_imports
+
+line_length:
+  warning: 100
+  error: 120
+
+indentation_width:
+  indentation_width: 4
+
+trailing_whitespace:
+  ignores_empty_lines: true
