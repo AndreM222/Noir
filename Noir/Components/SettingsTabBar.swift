@@ -11,7 +11,7 @@ struct TabBarSection: Identifiable, Hashable {
     let id: String
     var title: String
     var icon: String?
-    
+
     static func example() -> [TabBarSection] {
         [
             TabBarSection(
@@ -95,9 +95,9 @@ struct SettingsTabBar: View {
 }
 
 private struct BarPreview: View {
-    @State private var selection: TabBarSection = TabBarSection.example().first!
+    @State private var selection: TabBarSection = .example().first!
     private let tabs: [TabBarSection] = TabBarSection.example()
-    
+
     var body: some View {
         ZStack(alignment: .center) {
             Rectangle()
@@ -110,4 +110,3 @@ private struct BarPreview: View {
         .background(.ultraThinMaterial)
     }
 }
-

@@ -19,7 +19,7 @@ struct Account: Identifiable, Hashable {
         let now = Date()
         let oneMonthAgo = Calendar.current.date(byAdding: .month, value: -1, to: now) ?? now
         let twoMonthsAgo = Calendar.current.date(byAdding: .month, value: -2, to: now) ?? now
-        
+
         return [
             Account(
                 name: "Andre",
@@ -59,7 +59,7 @@ struct Profile: Identifiable, Hashable {
         let personalAccountID = account[0].id
         let workAccountID = account[1].id
         let familyAccountID = account[2].id
-        
+
         return [
             // Personal account profiles
             Profile(
@@ -86,7 +86,7 @@ struct Profile: Identifiable, Hashable {
                 color: .zen,
                 icon: .bolt
             ),
-            
+
             // Work account profiles
             Profile(
                 account: workAccountID,
@@ -104,7 +104,7 @@ struct Profile: Identifiable, Hashable {
                 color: .ocean,
                 icon: .drop
             ),
-            
+
             // Family account profiles
             Profile(
                 account: familyAccountID,

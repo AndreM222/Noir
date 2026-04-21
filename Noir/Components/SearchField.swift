@@ -9,16 +9,16 @@ import SwiftUI
 
 struct SearchField: View {
     @State private var text = ""
-    
+
     var body: some View {
         HStack(spacing: 8) {
             Image(systemName: "magnifyingglass")
                 .foregroundStyle(.secondary)
-            
+
             TextField("Search or Enter Movie Name...", text: $text)
                 .textFieldStyle(.plain)
                 .foregroundStyle(.primary)
-            
+
             if !text.isEmpty {
                 Button {
                     text = ""

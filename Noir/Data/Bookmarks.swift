@@ -1,5 +1,5 @@
 //
-//  Tabs.swift
+//  Bookmarks.swift
 //  NoirBrowser
 //
 //  Created by Andre Mossi on 3/27/26.

@@ -5,9 +5,9 @@
 //  Created by Andre Mossi on 3/31/26.
 //
 
-import SwiftUI
-import Kingfisher
 internal import UniformTypeIdentifiers
+import Kingfisher
+import SwiftUI
 
 struct BookmarksListView: View {
     @Binding var currWindow: WindowType
@@ -35,14 +35,21 @@ struct BookmarksListView: View {
                         removal: AnyTransition.scale.combined(with: .opacity)
                             .combined(with: .move(edge: .leading))
                     ))
-                    .onDrag{
+                    .onDrag {
                         draggedBookmark = bookmark
                         haptic(.impact)
                         return NSItemProvider(object: bookmark.id.uuidString as NSString)
                     }
-                    .onDrop(of: [.text], delegate: BookmarkDropDelegate(item: bookmark, bookmarks: $bookmarks, draggedItem: $draggedBookmark))
+                    .onDrop(
+                        of: [.text],
+                        delegate: BookmarkDropDelegate(
+                            item: bookmark,
+                            bookmarks: $bookmarks,
+                            draggedItem: $draggedBookmark
+                        )
+                    )
                 }
-                
+
                 // Add new bookmark button (leftmost)
                 Button {
                     withAnimation(.spring(response: 0.35)) {
@@ -77,8 +84,8 @@ private struct BookmarkDropDelegate: DropDelegate {
     let item: Bookmarks
     @Binding var bookmarks: [Bookmarks]
     @Binding var draggedItem: Bookmarks?
-    
-    func dropEntered(info: DropInfo) {
+
+    func dropEntered(info _: DropInfo) {
         guard let draggedItem,
               draggedItem != item,
               let fromIndex = bookmarks.firstIndex(of: draggedItem),
@@ -97,21 +104,21 @@ private struct BookmarkDropDelegate: DropDelegate {
         }
     }
 
-    func performDrop(info: DropInfo) -> Bool {
+    func performDrop(info _: DropInfo) -> Bool {
         draggedItem = nil
         haptic(.success)
         return true
     }
 }
 
-extension BookmarksListView {
-    fileprivate func deleteBookmark(bookmark: Bookmarks) {
+private extension BookmarksListView {
+    func deleteBookmark(bookmark: Bookmarks) {
         withAnimation(.spring(response: 0.35)) {
             bookmarks.removeAll { $0.id == bookmark.id }
         }
     }
-    
-    fileprivate func addBookmark() {
+
+    func addBookmark() {
         let newBookmark = Bookmarks(
             movieId: currWindow.movieId ?? "default",
             profile: "Andre"
@@ -129,11 +136,22 @@ struct BookmarkCard: View {
     @Binding var draggedItem: Bookmarks?
     let movies: [Movie]
     let onDelete: () -> Void
-    
-    private var movieInfo: Movie? { movies.first { $0.id == bookmark.movieId } }
-    private var isHovered: Bool { hoveredBookmarkIDs.contains(bookmark.id) }
-    private var isActive: Bool { currWindow.id == bookmark.id && currWindow.type == "movie" }
-    private var isDragging: Bool { draggedItem?.id == bookmark.id }
+
+    private var movieInfo: Movie? {
+        movies.first { $0.id == bookmark.movieId }
+    }
+
+    private var isHovered: Bool {
+        hoveredBookmarkIDs.contains(bookmark.id)
+    }
+
+    private var isActive: Bool {
+        currWindow.id == bookmark.id && currWindow.type == "movie"
+    }
+
+    private var isDragging: Bool {
+        draggedItem?.id == bookmark.id
+    }
 
     var body: some View {
         ZStack {
@@ -152,10 +170,14 @@ struct BookmarkCard: View {
                     )
                     .zIndex(-1)
             }
-            
+
             Button {
                 withAnimation(.spring(response: 0.32)) {
-                    currWindow = WindowType(id: bookmark.id, type: "movie", movieId: bookmark.movieId)
+                    currWindow = WindowType(
+                        id: bookmark.id,
+                        type: "movie",
+                        movieId: bookmark.movieId
+                    )
                 }
             } label: {
                 VStack(spacing: 0) {

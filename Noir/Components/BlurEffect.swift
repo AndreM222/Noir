@@ -5,19 +5,18 @@
 //  Created by Andre Mossi on 4/13/26.
 //
 
-
-import SwiftUI
 import CoreImage
 import CoreImage.CIFilterBuiltins
+import SwiftUI
 
 struct VariableBlurView: NSViewRepresentable {
     var maxBlurRadius: CGFloat = 20
 
-    func makeNSView(context: Context) -> NSView {
+    func makeNSView(context _: Context) -> NSView {
         VariableBlurNSView(maxBlurRadius: maxBlurRadius)
     }
 
-    func updateNSView(_ nsView: NSView, context: Context) {}
+    func updateNSView(_: NSView, context _: Context) {}
 }
 
 class VariableBlurNSView: NSView {
@@ -29,7 +28,10 @@ class VariableBlurNSView: NSView {
         wantsLayer = true
     }
 
-    required init?(coder: NSCoder) { fatalError() }
+    @available(*, unavailable)
+    required init?(coder _: NSCoder) {
+        fatalError()
+    }
 
     override func makeBackingLayer() -> CALayer {
         let layer = CALayer()
@@ -51,7 +53,7 @@ struct ProgressiveBlurView: View {
 
     var body: some View {
         ZStack {
-            ForEach(0..<steps, id: \.self) { i in
+            ForEach(0 ..< steps, id: \.self) { i in
                 let fraction = CGFloat(i + 1) / CGFloat(steps)
                 let blurAmount = fraction * fraction * maxBlur
 

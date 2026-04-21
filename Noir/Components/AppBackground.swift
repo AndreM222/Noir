@@ -12,10 +12,10 @@ struct GrainView: View {
 
     var body: some View {
         Canvas { context, size in
-            for _ in 0..<Int(size.width * size.height / 3) {
-                let x = CGFloat.random(in: 0..<size.width)
-                let y = CGFloat.random(in: 0..<size.height)
-                let opacity = Double.random(in: 0.03...0.12) * intensity
+            for _ in 0 ..< Int(size.width * size.height / 3) {
+                let x = CGFloat.random(in: 0 ..< size.width)
+                let y = CGFloat.random(in: 0 ..< size.height)
+                let opacity = Double.random(in: 0.03 ... 0.12) * intensity
                 context.fill(
                     Path(CGRect(x: x, y: y, width: 1, height: 1)),
                     with: .color(.white.opacity(opacity))
@@ -53,7 +53,7 @@ struct VisualEffectBackground: NSViewRepresentable {
     var material: NSVisualEffectView.Material = .hudWindow
     var blendingMode: NSVisualEffectView.BlendingMode = .behindWindow
 
-    func makeNSView(context: Context) -> NSVisualEffectView {
+    func makeNSView(context _: Context) -> NSVisualEffectView {
         let view = NSVisualEffectView()
         view.material = material
         view.blendingMode = blendingMode
@@ -61,7 +61,7 @@ struct VisualEffectBackground: NSViewRepresentable {
         return view
     }
 
-    func updateNSView(_ nsView: NSVisualEffectView, context: Context) {
+    func updateNSView(_ nsView: NSVisualEffectView, context _: Context) {
         nsView.material = material
         nsView.blendingMode = blendingMode
     }

@@ -1,5 +1,5 @@
 //
-//  Tabs.swift
+//  Movies.swift
 //  NoirBrowser
 //
 //  Created by Andre Mossi on 3/27/26.
@@ -35,7 +35,9 @@ struct Movie: Identifiable, Hashable {
                 id: "inception",
                 title: "Inception",
                 description: "A thief who steals corporate secrets through dream-sharing technology is given the inverse task of planting an idea.",
-                posterURL: URL(string: "https://image.tmdb.org/t/p/w1280/xlaY2zyzMfkhk0HSC5VUwzoZPU1.jpg"),
+                posterURL: URL(
+                    string: "https://image.tmdb.org/t/p/w1280/xlaY2zyzMfkhk0HSC5VUwzoZPU1.jpg"
+                ),
                 trailerURL: URL(string: "https://www.youtube.com/watch?v=YoHD9XEInc0"),
                 releaseYear: 2010,
                 duration: 8880,
@@ -56,7 +58,9 @@ struct Movie: Identifiable, Hashable {
                 id: "thedarkknight",
                 title: "The Dark Knight",
                 description: "Batman faces the Joker, a criminal mastermind who plunges Gotham into chaos.",
-                posterURL: URL(string: "https://image.tmdb.org/t/p/w500/qJ2tW6WMUDux911r6m7haRef0WH.jpg"),
+                posterURL: URL(
+                    string: "https://image.tmdb.org/t/p/w500/qJ2tW6WMUDux911r6m7haRef0WH.jpg"
+                ),
                 trailerURL: URL(string: "https://www.youtube.com/watch?v=EXeTwQWrcwY"),
                 releaseYear: 2008,
                 duration: 9120,
@@ -77,7 +81,9 @@ struct Movie: Identifiable, Hashable {
                 id: "interstellar",
                 title: "Interstellar",
                 description: "A team of explorers travel through a wormhole in space in an attempt to ensure humanity's survival.",
-                posterURL: URL(string: "https://image.tmdb.org/t/p/w500/rAiYTfKGqDCRIIqo664sY9XZIvQ.jpg"),
+                posterURL: URL(
+                    string: "https://image.tmdb.org/t/p/w500/rAiYTfKGqDCRIIqo664sY9XZIvQ.jpg"
+                ),
                 trailerURL: URL(string: "https://www.youtube.com/watch?v=zSWdZVtXT7E"),
                 releaseYear: 2014,
                 duration: 10140,
@@ -98,7 +104,9 @@ struct Movie: Identifiable, Hashable {
                 id: "parasite",
                 title: "Parasite",
                 description: "A poor family schemes to become employed by a wealthy family.",
-                posterURL: URL(string: "https://image.tmdb.org/t/p/w500/7IiTTgloJzvGI1TAYymCfbfl3vT.jpg"),
+                posterURL: URL(
+                    string: "https://image.tmdb.org/t/p/w500/7IiTTgloJzvGI1TAYymCfbfl3vT.jpg"
+                ),
                 trailerURL: URL(string: "https://www.youtube.com/watch?v=5xH0HfJHsaY"),
                 releaseYear: 2019,
                 duration: 7920,
@@ -119,7 +127,9 @@ struct Movie: Identifiable, Hashable {
                 id: "whiplash",
                 title: "Whiplash",
                 description: "A promising young drummer enrolls at a cut-throat music conservatory.",
-                posterURL: URL(string: "https://image.tmdb.org/t/p/w500/oPxnRhyAIzJKGUEdSiwTJQBa3NM.jpg"),
+                posterURL: URL(
+                    string: "https://image.tmdb.org/t/p/w500/oPxnRhyAIzJKGUEdSiwTJQBa3NM.jpg"
+                ),
                 trailerURL: URL(string: "https://www.youtube.com/watch?v=7d_jQycdQGo"),
                 releaseYear: 2014,
                 duration: 6420,
@@ -137,5 +147,4 @@ struct Movie: Identifiable, Hashable {
             )
         ]
     }
-
 }

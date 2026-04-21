@@ -5,8 +5,8 @@
 //  Created by Andre Mossi on 4/11/26.
 //
 
-import SwiftUI
 import AppKit
+import SwiftUI
 
 struct ShortcutRow: View {
     let item: ShortcutItem
@@ -26,7 +26,7 @@ struct ShortcutRow: View {
                     .font(.system(size: 13, design: .rounded))
                     .foregroundStyle(.white.opacity(0.85))
                     .frame(maxWidth: .infinity, alignment: .leading)
-                
+
                 KeyBadge(binding: item.binding)
             }
             .padding(.horizontal, 16)
@@ -34,7 +34,8 @@ struct ShortcutRow: View {
             .contentShape(Rectangle())
         }
         .buttonStyle(.plain)
-        .background(selectedShortcut?.id == item.id ? .white.opacity(0.1) : isHovering ? .white.opacity(0.05) : .clear)
+        .background(selectedShortcut?.id == item.id ? .white.opacity(0.1) : isHovering ? .white
+            .opacity(0.05) : .clear)
         .onHover { isHovering = $0 }
         .animation(.easeOut(duration: 0.12), value: isHovering)
     }
@@ -43,7 +44,7 @@ struct ShortcutRow: View {
 struct KeyBadge: View {
     let binding: String
 
-    // Split e.g. "⌘⇧T" into ["⌘", "⇧", "T"]
+    /// Split e.g. "⌘⇧T" into ["⌘", "⇧", "T"]
     private var parts: [String] {
         let modifiers: [Character] = ["⌘", "⇧", "⌥", "⌃"]
         var result: [String] = []
@@ -84,13 +85,13 @@ struct KeyBadge: View {
 
 private func iconForGroup(_ group: String) -> String {
     switch group.lowercased() {
-    case "file":   return "doc"
-    case "edit":   return "pencil"
-    case "view":   return "eye"
-    case "window": return "macwindow"
-    case "help":   return "questionmark.circle"
-    case "tab":    return "rectangle.split.2x1"
-    default:       return "keyboard"
+    case "file": "doc"
+    case "edit": "pencil"
+    case "view": "eye"
+    case "window": "macwindow"
+    case "help": "questionmark.circle"
+    case "tab": "rectangle.split.2x1"
+    default: "keyboard"
     }
 }
 
@@ -137,7 +138,10 @@ struct KeyHeader: View {
 
                             RoundedRectangle(cornerRadius: 14)
                                 .fill(LinearGradient(
-                                    gradient: Gradient(colors: [.white.opacity(0.04), .white.opacity(0.08)]),
+                                    gradient: Gradient(colors: [
+                                        .white.opacity(0.04),
+                                        .white.opacity(0.08)
+                                    ]),
                                     startPoint: .top, endPoint: .bottom
                                 ))
                                 .overlay(
@@ -166,7 +170,7 @@ struct KeyHeader: View {
                     .transition(.scale(scale: 0.7).combined(with: .opacity))
                     .animation(
                         .spring(response: 0.28, dampingFraction: 0.6)
-                        .delay(Double(index) * 0.06),
+                            .delay(Double(index) * 0.06),
                         value: pressed
                     )
             }
@@ -209,11 +213,11 @@ struct ShortcutGroupHeader: View {
     }
 }
 
-struct MenuShortcutScanner {
+enum MenuShortcutScanner {
     static func scan() -> [String: [ShortcutItem]] {
         guard let mainMenu = NSApp.mainMenu else { return [:] }
         var grouped: [String: [ShortcutItem]] = [:]
-        
+
         for topItem in mainMenu.items {
             let groupName = topItem.title.isEmpty ? "App" : topItem.title
             guard let submenu = topItem.submenu else { continue }
@@ -222,13 +226,13 @@ struct MenuShortcutScanner {
                 grouped[groupName, default: []].append(contentsOf: items)
             }
         }
-        
+
         return grouped
     }
-    
+
     private static func collectItems(from menu: NSMenu, group: String) -> [ShortcutItem] {
         var result: [ShortcutItem] = []
-        
+
         for item in menu.items {
             if let submenu = item.submenu {
                 result += collectItems(from: submenu, group: group)
@@ -237,34 +241,37 @@ struct MenuShortcutScanner {
             result.append(ShortcutItem(
                 name: item.title,
                 description: item.toolTip ?? "",
-                binding: formatBinding(key: item.keyEquivalent, modifiers: item.keyEquivalentModifierMask),
+                binding: formatBinding(
+                    key: item.keyEquivalent,
+                    modifiers: item.keyEquivalentModifierMask
+                ),
                 group: group
             ))
         }
-        
+
         return result
     }
-    
+
     private static func formatBinding(key: String, modifiers: NSEvent.ModifierFlags) -> String {
-         var parts = ""
-         if modifiers.contains(.control) { parts += "⌃" }
-         if modifiers.contains(.option)  { parts += "⌥" }
-         if modifiers.contains(.shift)   { parts += "⇧" }
-         if modifiers.contains(.command) { parts += "⌘" }
+        var parts = ""
+        if modifiers.contains(.control) { parts += "⌃" }
+        if modifiers.contains(.option) { parts += "⌥" }
+        if modifiers.contains(.shift) { parts += "⇧" }
+        if modifiers.contains(.command) { parts += "⌘" }
 
-         let specialKeys: [String: String] = [
-             "\r": "↩", "\t": "⇥", " ": "Space",
-             "\u{7F}": "⌫", "\u{F700}": "↑", "\u{F701}": "↓",
-             "\u{F702}": "←", "\u{F703}": "→", "\u{F708}": "F5"
-         ]
+        let specialKeys: [String: String] = [
+            "\r": "↩", "\t": "⇥", " ": "Space",
+            "\u{7F}": "⌫", "\u{F700}": "↑", "\u{F701}": "↓",
+            "\u{F702}": "←", "\u{F703}": "→", "\u{F708}": "F5"
+        ]
 
-         parts += specialKeys[key] ?? key.uppercased()
-         return parts
-     }
+        parts += specialKeys[key] ?? key.uppercased()
+        return parts
+    }
 }
 
 struct ShortcutInfo: View {
-    var item: ShortcutItem? = nil
+    var item: ShortcutItem?
     @State private var isHovering = false
 
     private var effectiveItem: ShortcutItem {
@@ -360,7 +367,7 @@ struct ShortcutInfo: View {
         }
         .frame(width: 200)
     }
-    
+
     private func keysOverflow(in availableWidth: CGFloat) -> Bool {
         let modifiers: [Character] = ["⌘", "⇧", "⌥", "⌃"]
         var remaining = effectiveItem.binding
@@ -383,26 +390,26 @@ extension MenuShortcutScanner {
     static func mockData() -> [String: [ShortcutItem]] {
         [
             "File": [
-                ShortcutItem(name: "New Tab",       description: "", binding: "⌘T",  group: "File"),
-                ShortcutItem(name: "New Window",    description: "", binding: "⌘N",  group: "File"),
-                ShortcutItem(name: "Close Tab",     description: "", binding: "⌘W",  group: "File"),
-                ShortcutItem(name: "Close Window",  description: "", binding: "⌘⇧W", group: "File"),
+                ShortcutItem(name: "New Tab", description: "", binding: "⌘T", group: "File"),
+                ShortcutItem(name: "New Window", description: "", binding: "⌘N", group: "File"),
+                ShortcutItem(name: "Close Tab", description: "", binding: "⌘W", group: "File"),
+                ShortcutItem(name: "Close Window", description: "", binding: "⌘⇧W", group: "File")
             ],
             "Edit": [
-                ShortcutItem(name: "Copy",          description: "", binding: "⌘C",  group: "Edit"),
-                ShortcutItem(name: "Paste",         description: "", binding: "⌘V",  group: "Edit"),
-                ShortcutItem(name: "Find",          description: "", binding: "⌘F",  group: "Edit"),
+                ShortcutItem(name: "Copy", description: "", binding: "⌘C", group: "Edit"),
+                ShortcutItem(name: "Paste", description: "", binding: "⌘V", group: "Edit"),
+                ShortcutItem(name: "Find", description: "", binding: "⌘F", group: "Edit")
             ],
             "View": [
-                ShortcutItem(name: "Reload Page",   description: "", binding: "⌘R",  group: "View"),
-                ShortcutItem(name: "Zoom In",       description: "", binding: "⌘+",  group: "View"),
-                ShortcutItem(name: "Zoom Out",      description: "", binding: "⌘-",  group: "View"),
-                ShortcutItem(name: "Actual Size",   description: "", binding: "⌘0",  group: "View"),
+                ShortcutItem(name: "Reload Page", description: "", binding: "⌘R", group: "View"),
+                ShortcutItem(name: "Zoom In", description: "", binding: "⌘+", group: "View"),
+                ShortcutItem(name: "Zoom Out", description: "", binding: "⌘-", group: "View"),
+                ShortcutItem(name: "Actual Size", description: "", binding: "⌘0", group: "View")
             ],
             "Window": [
-                ShortcutItem(name: "Settings",      description: "", binding: "⌘,",  group: "Window"),
-                ShortcutItem(name: "Minimize",      description: "", binding: "⌘M",  group: "Window"),
-            ],
+                ShortcutItem(name: "Settings", description: "", binding: "⌘,", group: "Window"),
+                ShortcutItem(name: "Minimize", description: "", binding: "⌘M", group: "Window")
+            ]
         ]
     }
 }
@@ -412,16 +419,19 @@ extension MenuShortcutScanner {
 struct ShortcutsSection: View {
     @State private var grouped: [String: [ShortcutItem]] = [:]
     @State private var searchText = ""
-    @State private var selectedShortcut: ShortcutItem? =  nil
-    
-    var previewData: [String: [ShortcutItem]]? = nil
-    private var sortedGroups: [String] { grouped.keys.sorted() }
+    @State private var selectedShortcut: ShortcutItem? = nil
+
+    var previewData: [String: [ShortcutItem]]?
+    private var sortedGroups: [String] {
+        grouped.keys.sorted()
+    }
+
     private var filteredGroups: [String] {
         guard !searchText.isEmpty else { return sortedGroups }
         return sortedGroups.filter { group in
             (grouped[group] ?? []).contains {
                 $0.name.localizedCaseInsensitiveContains(searchText) ||
-                $0.binding.contains(searchText)
+                    $0.binding.contains(searchText)
             }
         }
     }
@@ -431,7 +441,7 @@ struct ShortcutsSection: View {
         guard !searchText.isEmpty else { return items }
         return items.filter {
             $0.name.localizedCaseInsensitiveContains(searchText) ||
-            $0.binding.contains(searchText)
+                $0.binding.contains(searchText)
         }
     }
 
@@ -456,7 +466,7 @@ struct ShortcutsSection: View {
                         .fill(.white.opacity(0.07))
                         .frame(height: 0.5)
                 }
-                
+
                 // List
                 ScrollView(.vertical) {
                     VStack(alignment: .leading, spacing: 0) {
@@ -464,11 +474,11 @@ struct ShortcutsSection: View {
                             let items = filteredItems(for: group)
                             if !items.isEmpty {
                                 ShortcutGroupHeader(title: group, icon: iconForGroup(group))
-                                
+
                                 VStack(spacing: 0) {
                                     ForEach(items) { item in
                                         ShortcutRow(item: item, selectedShortcut: $selectedShortcut)
-                                        
+
                                         if item.id != items.last?.id {
                                             Rectangle()
                                                 .fill(.white.opacity(0.05))
@@ -479,7 +489,7 @@ struct ShortcutsSection: View {
                                 }
                             }
                         }
-                        
+
                         Spacer(minLength: 20)
                     }
                 }
@@ -503,10 +513,9 @@ struct ShortcutsSection: View {
                     }
                 }
             }
-            
+
             ShortcutInfo(item: selectedShortcut)
         }
-            
     }
 }
 
@@ -515,7 +524,6 @@ struct ShortcutsSection: View {
 }
 
 private struct ShortcutsPreview: View {
-    
     var body: some View {
         ZStack(alignment: .center) {
             Rectangle()
@@ -535,4 +543,3 @@ private struct ShortcutsPreview: View {
         .background(.ultraThinMaterial)
     }
 }
-

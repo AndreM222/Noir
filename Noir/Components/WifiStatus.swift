@@ -7,29 +7,41 @@
 
 import Foundation
 import Network
+import SwiftUI
 
-func isConnectedToNetwork() -> Bool {
-    // Prefer Network framework over deprecated SystemConfiguration reachability APIs.
-    let monitor = NWPathMonitor()
-    let queue = DispatchQueue(label: "NetworkPathMonitor")
-    let semaphore = DispatchSemaphore(value: 0)
+@Sendable
+func isConnectedToNetwork() async -> Bool {
+    await withCheckedContinuation { continuation in
+        let monitor = NWPathMonitor()
+        let queue = DispatchQueue(label: "NetworkPathMonitor")
 
-    var isConnected: Bool = false
+        monitor.pathUpdateHandler = { path in
+            let connected = path.status == .satisfied
+            continuation.resume(returning: connected)
+            monitor.cancel()
+        }
 
-    monitor.pathUpdateHandler = { path in
-        // Consider the network reachable if status is satisfied and it doesn't require an interface type that's unavailable.
-        isConnected = (path.status == .satisfied)
-        semaphore.signal()
-        monitor.cancel()
+        monitor.start(queue: queue)
     }
+}
 
-    monitor.start(queue: queue)
+struct WifiStatus: View {
+    @State private var isConnected = false
+    var size: CGFloat = 12
 
-    // Wait briefly for the first path update. If none arrives, assume not connected.
-    let timeoutResult = semaphore.wait(timeout: .now() + 0.5)
-    if timeoutResult == .timedOut {
-        monitor.cancel()
+    var body: some View {
+        Image(systemName: isConnected ? "wifi" : "wifi.slash")
+            .font(.system(size: size, weight: .medium))
+            .task {
+                for await path in NWPathMonitor() {
+                    await MainActor.run {
+                        isConnected = path.status == .satisfied
+                    }
+                }
+            }
     }
+}
 
-    return isConnected
+#Preview {
+    WifiStatus()
 }

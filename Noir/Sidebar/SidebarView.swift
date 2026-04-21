@@ -7,11 +7,11 @@
 
 import SwiftUI
 
-struct optionButton: View {
+struct OptionButton: View {
     @Binding var currWindow: WindowType
     let type: String
     let icon: String
-    
+
     var body: some View {
         Button {
             currWindow = WindowType(type: type)
@@ -22,8 +22,8 @@ struct optionButton: View {
         }
         .background(
             currWindow == WindowType(type: type) ?
-            Color.black.opacity(-2.8)
-            :
+                Color.black.opacity(-2.8)
+                :
                 Color.black.opacity(0.8)
         )
         .clipShape(RoundedRectangle(cornerRadius: 12))
@@ -43,11 +43,11 @@ struct SidebarView: View {
     var body: some View {
         VStack(alignment: .leading) {
             HStack {
-                optionButton(currWindow: $currWindow, type: "home", icon: "house")
+                OptionButton(currWindow: $currWindow, type: "home", icon: "house")
 
-                optionButton(currWindow: $currWindow, type: "cinema", icon: "ticket")
-                
-                optionButton(currWindow: $currWindow, type: "likes", icon: "heart")
+                OptionButton(currWindow: $currWindow, type: "cinema", icon: "ticket")
+
+                OptionButton(currWindow: $currWindow, type: "likes", icon: "heart")
             }.padding(10)
             HStack {
                 Image(systemName: "bookmark")
@@ -55,8 +55,12 @@ struct SidebarView: View {
             }
             .padding(.horizontal, 10)
             .padding(.vertical, 1)
-            BookmarksListView(currWindow: $currWindow, bookmarks: $bookmarks, movies: Movie.examplesMovie())
-                .padding(.vertical, -33)
+            BookmarksListView(
+                currWindow: $currWindow,
+                bookmarks: $bookmarks,
+                movies: Movie.examplesMovie()
+            )
+            .padding(.vertical, -33)
 
             HStack {
                 Image(systemName: "list.bullet")
@@ -64,7 +68,13 @@ struct SidebarView: View {
             }
             .padding(.horizontal, 10)
             .padding(.vertical, 1)
-            TabsListView(currWindow: $currWindow, tabs: $tabs, session: $sessions, movies: Movie.examplesMovie(), services: Service.examples())
+            TabsListView(
+                currWindow: $currWindow,
+                tabs: $tabs,
+                session: $sessions,
+                movies: Movie.examplesMovie(),
+                services: Service.examples()
+            )
         }
         .onAppear {
             sessions = WatchSession.examplesSession(tabs: tabs)
@@ -88,7 +98,7 @@ struct SidebarPreview: View {
     init() {
         let tabsData = MovieTabs.examplesMovie()
         let bookmarksData = Bookmarks.examplesBookmarks()
-        
+
         _tabs = State(initialValue: tabsData)
         _bookmarks = State(initialValue: bookmarksData)
         _sessions = State(initialValue: WatchSession.examplesSession(tabs: tabsData))

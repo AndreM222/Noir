@@ -7,30 +7,31 @@
 
 import SwiftUI
 
-
 enum BrowserThemeMode: String, CaseIterable, Identifiable {
-    case light = "light"
-    case dark  = "dark"
-    case auto  = "auto"
+    case light
+    case dark
+    case auto
 
-    var id: Self { self }
-    
+    var id: Self {
+        self
+    }
+
     var tabInfo: TabBarSection {
         switch self {
         case .light:
-            return TabBarSection(
+            TabBarSection(
                 id: "light",
                 title: "Light",
                 icon: "sun.max"
             )
         case .dark:
-            return TabBarSection(
+            TabBarSection(
                 id: "dark",
                 title: "Dark",
                 icon: "moon.stars"
             )
         case .auto:
-            return TabBarSection(
+            TabBarSection(
                 id: "auto",
                 title: "Auto",
                 icon: "slider.horizontal.3"
@@ -51,18 +52,19 @@ struct GeneralSection: View {
         Binding<TabBarSection>(
             get: { selection.tabInfo },
             set: { newValue in
-                if let newSection = BrowserThemeMode.allCases.first(where: { $0.tabInfo.id == newValue.id }) {
+                if let newSection = BrowserThemeMode.allCases
+                    .first(where: { $0.tabInfo.id == newValue.id })
+                {
                     selection = newSection
                 }
             }
         )
     }
-    private let tabs: [TabBarSection] = BrowserThemeMode.allCases.map(\.tabInfo)
 
+    private let tabs: [TabBarSection] = BrowserThemeMode.allCases.map(\.tabInfo)
 
     var body: some View {
         SectionCard(title: "Appearance", icon: "paintbrush") {
-            
             VStack(alignment: .leading, spacing: 20) {
                 SettingsTabBar(selection: tabSelection, tabs: tabs)
                     .frame(maxWidth: .infinity)
@@ -92,11 +94,12 @@ struct GeneralSection: View {
                             .font(.system(size: 13, weight: .medium, design: .rounded))
                             .foregroundStyle(.white)
                         Spacer()
-                        Text(browserTheme.density < 0.4 ? "Compact" : browserTheme.density > 0.65 ? "Spacious" : "Default")
+                        Text(browserTheme.density < 0.4 ? "Compact" : browserTheme
+                            .density > 0.65 ? "Spacious" : "Default")
                             .font(.system(size: 11))
                             .foregroundStyle(.white.opacity(0.4))
                     }
-                    Slider(value: $browserTheme.density, in: 0...1)
+                    Slider(value: $browserTheme.density, in: 0 ... 1)
                         .tint(.white.opacity(0.6))
                 }
             }
@@ -110,7 +113,7 @@ struct GeneralSection: View {
 
 private struct GeneralPreview: View {
     @State private var browserTheme = BrowserTheme()
-    
+
     var body: some View {
         ZStack(alignment: .center) {
             Rectangle()
@@ -130,4 +133,3 @@ private struct GeneralPreview: View {
         .background(.ultraThinMaterial)
     }
 }
-

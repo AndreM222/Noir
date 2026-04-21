@@ -30,7 +30,6 @@ struct MovieTabs: Identifiable, Hashable {
             )
         ]
     }
-
 }
 
 struct WatchSession: Identifiable, Hashable {
@@ -76,7 +75,7 @@ struct WatchSession: Identifiable, Hashable {
                 serviceId: "netflix",
                 profile: "Andre",
                 progress: 0.1,
-                lastViewed: Date().addingTimeInterval(-172800),
+                lastViewed: Date().addingTimeInterval(-172_800),
                 isBookmarked: false,
                 url: URL(string: "https://www.netflix.com/watch/456")!
             ),
